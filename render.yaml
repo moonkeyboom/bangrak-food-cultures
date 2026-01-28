@@ -1,0 +1,49 @@
+services:
+  # Type of service
+  - type: web
+
+    # Name of your service (will be used in URL: https://your-service.onrender.com)
+    name: bangrak-food-cultures-api
+
+    # Runtime environment
+    env: docker
+
+    # Docker context
+    dockerContext: .
+
+    # Dockerfile path
+    dockerfilePath: Dockerfile.backend
+
+    # Region (deploy to the closest region to your users)
+    region: singapore
+
+    # Build and run configurations
+    plan: free # Use free tier
+
+    # Health check path (Render will check this URL)
+    healthCheckPath: /api/health
+
+    # Auto-deploy on git push
+    branch: main
+    # If you want to deploy from a different branch, change it here
+
+    # Environment variables (can also be set in Render dashboard)
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+
+      - key: PORT
+        value: 8080
+
+      # Database credentials (set these in Render dashboard, not here!)
+      # - key: SPRING_DATASOURCE_URL
+      #   value: jdbc:postgresql://...
+
+      # - key: SPRING_DATASOURCE_USERNAME
+      #   value: postgres
+
+      # - key: SPRING_DATASOURCE_PASSWORD
+      #   value: your-password
+
+      # - key: ADMIN_PASSWORD
+      #   value: your-admin-password
