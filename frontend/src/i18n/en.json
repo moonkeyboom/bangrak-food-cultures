@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "FOOD CULTURES in Bangrak District",
+    "subtitle": "Food Cultures in Bangrak District"
+  },
+  "nav": {
+    "search": "Search restaurants...",
+    "filter": "Filter",
+    "language": "Change Language"
+  },
+  "filter": {
+    "title": "Filters",
+    "category": "Restaurant Type",
+    "district": "Sub-district",
+    "reset": "Reset",
+    "apply": "Apply Filters"
+  },
+  "categories": {
+    "cafe": "Cafe",
+    "bar": "Bar",
+    "chinese_restaurant": "Chinese Restaurant",
+    "japanese_restaurant": "Japanese Restaurant",
+    "south_asian_restaurant": "South Asian Restaurant",
+    "western_restaurant": "Western Restaurant",
+    "vegetarian_restaurant": "Vegetarian Restaurant",
+    "halal_restaurant": "Halal Restaurant",
+    "healthy_restaurant": "Healthy Food Restaurant",
+    "thai_restaurant": "Thai Restaurant"
+  },
+  "districts": {
+    "maha_phruettharam": "Maha Phruettharam",
+    "silom": "Silom",
+    "suriyawong": "Suriyawong",
+    "bang_rak": "Bang Rak",
+    "si_phraya": "Si Phraya"
+  },
+  "map": {
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "reset": "Reset View",
+    "rotate": "Rotate Map"
+  },
+  "restaurant": {
+    "viewOnMap": "View on Google Map",
+    "openInGoogleMaps": "Open in Google Maps",
+    "recommended": "Recommended by",
+    "recommendedByCheewajit": "Recommended by",
+    "healthFriendly": "Health-friendly",
+    "healthyRestaurant": "Healthy Restaurant",
+    "heritage": "Heritage Restaurant",
+    "heritageRestaurant": "Heritage Restaurant",
+    "noResults": "No restaurants found",
+    "loading": "Loading...",
+    "photoCounter": "{{current}} / {{total}}"
+  },
+  "admin": {
+    "title": "Manage Restaurants",
+    "login": "Admin Login",
+    "password": "Password",
+    "loginButton": "Login",
+    "logout": "Logout",
+    "addRestaurant": "Add Restaurant",
+    "editRestaurant": "Edit Restaurant",
+    "deleteRestaurant": "Delete Restaurant",
+    "save": "Save",
+    "cancel": "Cancel",
+    "deleteConfirm": "Are you sure you want to delete this restaurant?",
+    "dragPin": "Drag pin to change position on map",
+    "uploadImage": "Upload Image",
+    "mapCustomization": "Customize Map"
+  }
+}
