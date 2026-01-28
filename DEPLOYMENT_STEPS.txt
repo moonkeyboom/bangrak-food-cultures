@@ -1,0 +1,30 @@
+คำสั่ง Deploy โปรเจกต์ bangrak-food-cultures
+
+1. Deploy Frontend ไป Vercel (Free Tier):
+   cd frontend
+   vercel login
+   vercel --prod
+
+2. Deploy Backend ไป Render (Free Tier):
+   - สร้างบัญชีที่ https://render.com
+   - Connect GitHub repository
+   - ใช้ render.yaml ที่มีอยู่แล้ว
+   - ตั้งค่า environment variables ใน Render dashboard:
+     * SPRING_DATASOURCE_URL=jdbc:postgresql://...
+     * SPRING_DATASOURCE_USERNAME=postgres
+     * SPRING_DATASOURCE_PASSWORD=...
+     * ADMIN_PASSWORD=...
+
+3. ตั้งค่า Database (Supabase Free Tier):
+   - สร้าง project ที่ https://supabase.com
+   - รับ connection string
+   - รัน SQL schema จาก database/schema-postgresql.sql
+
+4. เชื่อมต่อ Frontend กับ Backend:
+   - แก้ไข frontend/.env.production
+   - VITE_API_URL=https://bangrak-food-cultures-api.onrender.com
+
+5. ทดสอบการทำงาน:
+   - เปิด frontend URL
+   - ทดสอบ API endpoints
+   - ตรวจสอบ database connection
