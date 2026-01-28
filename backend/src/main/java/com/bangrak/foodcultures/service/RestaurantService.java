@@ -19,7 +19,7 @@ public class RestaurantService {
         return restaurantRepository.findAll();
     }
 
-    public Restaurant getRestaurantById(Long id) {
+    public Restaurant getRestaurantById(String id) {
         return restaurantRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found with id: " + id));
     }
@@ -28,7 +28,7 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
-    public Restaurant updateRestaurant(Long id, Restaurant restaurantDetails) {
+    public Restaurant updateRestaurant(String id, Restaurant restaurantDetails) {
         Restaurant restaurant = getRestaurantById(id);
 
         restaurant.setNameTh(restaurantDetails.getNameTh());
@@ -55,12 +55,12 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
-    public void deleteRestaurant(Long id) {
+    public void deleteRestaurant(String id) {
         Restaurant restaurant = getRestaurantById(id);
         restaurantRepository.delete(restaurant);
     }
 
-    public Restaurant updatePinPosition(Long id, Double pinX, Double pinY) {
+    public Restaurant updatePinPosition(String id, Double pinX, Double pinY) {
         Restaurant restaurant = getRestaurantById(id);
         restaurant.setPinX(pinX);
         restaurant.setPinY(pinY);
