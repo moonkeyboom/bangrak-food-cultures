@@ -37,7 +37,17 @@
       "Bash(start \"\" \"C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe\")",
       "Bash(start http://localhost/admin-secret-dashboard)",
       "Bash(git add:*)",
-      "Bash(del:*)"
+      "Bash(del:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(mvn clean package:*)",
+      "Bash(vercel:*)",
+      "Bash(pwsh:*)",
+      "Bash(powershell:*)",
+      "Bash(cat:*)",
+      "Bash(git revert:*)"
     ],
     "deny": [],
     "ask": []
