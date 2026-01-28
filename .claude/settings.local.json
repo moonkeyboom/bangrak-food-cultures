@@ -47,7 +47,8 @@
       "Bash(pwsh:*)",
       "Bash(powershell:*)",
       "Bash(cat:*)",
-      "Bash(git revert:*)"
+      "Bash(git revert:*)",
+      "Bash(curl.exe:*)"
     ],
     "deny": [],
     "ask": []

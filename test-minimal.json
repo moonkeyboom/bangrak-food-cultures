@@ -1,0 +1,13 @@
+{
+  "nameTh": "ทดสอบ",
+  "nameEn": "Test",
+  "descriptionTh": "ทดสอบระบบ",
+  "descriptionEn": "Testing system",
+  "category": "THAI_RESTAURANT",
+  "subDistrict": "SILOM",
+  "googleMapsUrl": "https://maps.google.com",
+  "pinX": 50.0,
+  "pinY": 50.0,
+  "healthFriendly": false,
+  "heritageRestaurant": false
+}
