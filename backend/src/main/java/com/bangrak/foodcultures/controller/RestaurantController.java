@@ -24,7 +24,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> getRestaurantById(@PathVariable Long id) {
+    public ResponseEntity<Restaurant> getRestaurantById(@PathVariable String id) {
         Restaurant restaurant = restaurantService.getRestaurantById(id);
         return ResponseEntity.ok(restaurant);
     }
@@ -37,7 +37,7 @@ public class RestaurantController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Restaurant> updateRestaurant(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody Restaurant restaurant
     ) {
         Restaurant updatedRestaurant = restaurantService.updateRestaurant(id, restaurant);
@@ -45,14 +45,14 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRestaurant(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRestaurant(@PathVariable String id) {
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/pin")
     public ResponseEntity<Restaurant> updatePinPosition(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody PinPositionRequest request
     ) {
         Restaurant updatedRestaurant = restaurantService.updatePinPosition(id, request.getPinX(), request.getPinY());
