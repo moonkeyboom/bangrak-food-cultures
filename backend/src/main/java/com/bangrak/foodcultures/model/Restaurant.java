@@ -57,7 +57,7 @@ public class Restaurant {
 
     private String imageUrl;
 
-    @Column(columnDefinition = "JSONB")
+    @Column(columnDefinition = "JSON")
     @Convert(converter = StringListConverter.class)
     private List<String> imageUrls;
 
