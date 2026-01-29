@@ -78,8 +78,8 @@ export const Pin: React.FC<PinProps> = ({
       style={{
         left: `${x}%`,
         top: `${y}%`,
-        width: '16px',
-        height: '16px',
+        width: '8px',
+        height: '8px',
       }}
       onClick={handleClick}
       draggable={isAdmin && isDraggable}
