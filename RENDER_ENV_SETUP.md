@@ -13,7 +13,7 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://lzuxhsqrmgorczmyynqa.supabase.co:5432/po
 
 #### Option 2: Transaction Pooler (Try if Direct Connection times out)
 ```
-SPRING_DATASOURCE_URL=jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
+SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
 ```
 
 **Connection Options Explained:**
@@ -21,8 +21,8 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com
 | Option | Host | Port | Pros | Cons |
 |--------|------|------|------|------|
 | Direct Connection | `lzuxhsqrmgorczmyynqa.supabase.co` | 5432 | Stable, persistent connections | May have network issues from Render |
-| Transaction Pooler | `aws-0-ap-southeast-1.pooler.supabase.com` | 6543 | Optimized for serverless, stateless | Each request = new connection |
-| Session Pooler | `aws-0-ap-southeast-1.pooler.supabase.com` | 5432 | Persistent connections | ❌ Times out after 10 min idle |
+| Transaction Pooler | `aws-1-ap-southeast-1.pooler.supabase.com` | 6543 | Optimized for serverless, stateless | Each request = new connection |
+| Session Pooler | `aws-1-ap-southeast-1.pooler.supabase.com` | 5432 | Persistent connections | ❌ Times out after 10 min idle |
 
 **CRITICAL Configuration Notes:**
 - **Credentials MUST be embedded in URL** (do NOT set separate SPRING_DATASOURCE_USERNAME/PASSWORD variables)
@@ -73,12 +73,12 @@ jdbc:postgresql://lzuxhsqrmgorczmyynqa.supabase.co:5432/postgres?user=postgres.l
 
 ### Transaction Pooler (Port 6543) - GOOD FOR SERVERLESS
 ```
-jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=YOUR_PASSWORD&sslmode=require
+jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=YOUR_PASSWORD&sslmode=require
 ```
 
 ### Session Pooler (Port 5432) - DO NOT USE
 ```
-jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres
+jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres
 ```
 ❌ **Problem**: Closes idle connections after ~10 minutes → HikariCP timeout errors
 
@@ -108,7 +108,7 @@ The connection attempt failed.
 
 3. **Try Transaction Pooler (if Direct Connection fails)**:
    ```
-   SPRING_DATASOURCE_URL=jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
+   SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
    ```
    Transaction pooler is designed for serverless environments like Render.
 
