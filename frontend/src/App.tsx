@@ -8,11 +8,21 @@ import { SearchBar } from './components/Filter/SearchBar';
 import { FilterPanel } from './components/Filter/FilterPanel';
 import { BottomSheet } from './components/Restaurant/BottomSheet';
 import { AdminDashboard } from './components/Admin/AdminDashboard';
+import { MaintenanceOverlay } from './components/Maintenance/MaintenanceOverlay';
 import { api } from './services/api';
 import type { Restaurant } from './types';
 
+// ============================================================
+// MAINTENANCE MODE FLAG
+// ============================================================
+// Set this to true to enable maintenance mode overlay
+// Set this to false to disable maintenance mode overlay
+const MAINTENANCE_MODE = true;
+// ============================================================
+
 const AppContent: React.FC = () => {
   const [isAdminRoute, setIsAdminRoute] = useState(false);
+  const [showMaintenanceOverlay, setShowMaintenanceOverlay] = useState(MAINTENANCE_MODE);
   const { restaurants, fetchRestaurants } = useRestaurants();
 
   // Check if current route is admin
@@ -71,30 +81,37 @@ const AppContent: React.FC = () => {
 
   // Main application
   return (
-    <div
-      className="relative no-scrollbar no-touch"
-      style={{
-        width: '100vw',
-        // MOBILE-SAFE: Use 100dvh (dynamic viewport height) which excludes mobile browser toolbars
-        // Fallback to 100vh for browsers that don't support dvh
-        height: '100dvh',
-        overflow: isAdminRoute ? 'auto' : 'hidden',
-        position: isAdminRoute ? 'relative' : 'fixed',
-        ...(!isAdminRoute && {
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }),
-      }}
-    >
-      {/* Main Map Area - fills entire viewport */}
-      {!isAdminRoute && <MapView />}
-      {!isAdminRoute && <SearchBar />}
-      {!isAdminRoute && <FilterPanel />}
-      {!isAdminRoute && <LanguageSwitcher />}
-      {!isAdminRoute && <BottomSheet />}
-    </div>
+    <>
+      {/* Maintenance Mode Overlay */}
+      {showMaintenanceOverlay && (
+        <MaintenanceOverlay onClose={() => setShowMaintenanceOverlay(false)} />
+      )}
+
+      <div
+        className="relative no-scrollbar no-touch"
+        style={{
+          width: '100vw',
+          // MOBILE-SAFE: Use 100dvh (dynamic viewport height) which excludes mobile browser toolbars
+          // Fallback to 100vh for browsers that don't support dvh
+          height: '100dvh',
+          overflow: isAdminRoute ? 'auto' : 'hidden',
+          position: isAdminRoute ? 'relative' : 'fixed',
+          ...(!isAdminRoute && {
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }),
+        }}
+      >
+        {/* Main Map Area - fills entire viewport */}
+        {!isAdminRoute && <MapView />}
+        {!isAdminRoute && <SearchBar />}
+        {!isAdminRoute && <FilterPanel />}
+        {!isAdminRoute && <LanguageSwitcher />}
+        {!isAdminRoute && <BottomSheet />}
+      </div>
+    </>
   );
 };
 
