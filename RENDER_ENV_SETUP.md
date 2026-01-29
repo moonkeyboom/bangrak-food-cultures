@@ -4,18 +4,35 @@
 
 Set these in Render Dashboard: https://dashboard.render.com/
 
-### Database Connection (CRITICAL - Try Session Pooler First)
+### Database Connection (CRITICAL - Requires IPv4 Add-on)
 
-#### ⚠️ TRY Session Pooler First (port 5432)
+#### ⚠️ RECOMMENDED: Purchase Supabase IPv4 Add-on
+Both Transaction Pooler and Session Pooler experience network connectivity issues from Render.
+The only reliable solution is to purchase Supabase's **IPv4 add-on** to use Direct Connection.
+
+**Why Poolers Don't Work:**
+- ❌ **Transaction Pooler (port 6543)**: Connection timeout during startup
+- ❌ **Session Pooler (port 5432)**: Connections close after 10 min, reconnects timeout
+- ✅ **Direct Connection (port 5432)**: Requires IPv6 or IPv4 add-on for Render compatibility
+
+**Steps to Fix:**
+1. Go to: https://supabase.com/dashboard/project/lzuxhsqrmgorczmyynqa/settings/billing
+2. Purchase **IPv4 add-on** (approximately $5/month)
+3. Update `SPRING_DATASOURCE_URL` to use Direct Connection (see below)
+4. Redeploy on Render
+
+### Direct Connection with IPv4 Add-on (RECOMMENDED)
+
+#### ✅ USE Direct Connection after purchasing IPv4 add-on
 ```
-SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
+SPRING_DATASOURCE_URL=jdbc:postgresql://lzuxhsqrmgorczmyynqa.supabase.co:5432/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
 ```
 
-**Why Session Pooler over Transaction Pooler:**
-- ✅ **Session Pooler (port 5432)**: Persistent connections, more reliable for initial connections
-- ⚠️ **Session Pooler caveat**: Closes idle connections after ~10 min (HikariCP will handle reconnects)
-- ❌ **Transaction Pooler (port 6543)**: Having network connectivity issues from Render
-- ❌ **Direct Connection (port 5432)**: NOT IPv4 compatible - requires IPv6 or IPv4 add-on
+**Direct Connection Benefits:**
+- ✅ Persistent, stable connections
+- ✅ No connection closure issues
+- ✅ Best performance and reliability
+- ✅ Optimized for Render's IPv4 network
 
 **Connection Options Explained:**
 
