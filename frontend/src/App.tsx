@@ -17,7 +17,7 @@ import type { Restaurant } from './types';
 // ============================================================
 // Set this to true to enable maintenance mode overlay
 // Set this to false to disable maintenance mode overlay
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 // ============================================================
 
 const AppContent: React.FC = () => {
