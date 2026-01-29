@@ -1,3 +1,4 @@
+// Maintenance overlay component for temporary website maintenance mode
 import React from 'react';
 import { X } from 'lucide-react';
 
