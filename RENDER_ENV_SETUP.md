@@ -4,17 +4,18 @@
 
 Set these in Render Dashboard: https://dashboard.render.com/
 
-### Database Connection (CRITICAL - Must Use Transaction Pooler)
+### Database Connection (CRITICAL - Try Session Pooler First)
 
-#### ⚠️ ONLY USE Transaction Pooler for Render
+#### ⚠️ TRY Session Pooler First (port 5432)
 ```
-SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
+SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
 ```
 
-**Why NOT Direct Connection or Session Pooler:**
-- ❌ **Direct Connection (port 5432)**: NOT IPv4 compatible - Render uses IPv4-only networking
-- ❌ **Session Pooler (port 5432)**: Closes idle connections after ~10 min → "This connection has been closed" error
-- ✅ **Transaction Pooler (port 6543)**: Only option that works with Render's IPv4 network
+**Why Session Pooler over Transaction Pooler:**
+- ✅ **Session Pooler (port 5432)**: Persistent connections, more reliable for initial connections
+- ⚠️ **Session Pooler caveat**: Closes idle connections after ~10 min (HikariCP will handle reconnects)
+- ❌ **Transaction Pooler (port 6543)**: Having network connectivity issues from Render
+- ❌ **Direct Connection (port 5432)**: NOT IPv4 compatible - requires IPv6 or IPv4 add-on
 
 **Connection Options Explained:**
 
@@ -30,9 +31,9 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com
 - **NO "db." prefix in hostname** (use `lzuxhsqrmgorczmyynqa.supabase.co` NOT `db.lzuxhsqrmgorczmyynqa.supabase.co`)
 
 **Which to choose?**
-- ✅ **Use Transaction Pooler** (port 6543) - ONLY option compatible with Render's IPv4 network
-- ⚠️ **Direct Connection** (port 5432) - Requires IPv6 or purchasing IPv4 add-on from Supabase
-- ❌ **NEVER use Session Pooler** (port 5432 with pooler) - causes timeout errors
+- ✅ **Use Session Pooler** (port 5432) - Most reliable for initial connections, handles persistent connections well
+- ⚠️ **Transaction Pooler** (port 6543) - Use ONLY if Session Pooler has connection issues
+- ❌ **Direct Connection** (port 5432) - Requires IPv6 or purchasing IPv4 add-on from Supabase
 
 ### Spring Configuration
 
