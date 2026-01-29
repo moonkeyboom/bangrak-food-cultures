@@ -4,17 +4,17 @@
 
 Set these in Render Dashboard: https://dashboard.render.com/
 
-### Database Connection (CRITICAL - Use Direct Connection)
+### Database Connection (CRITICAL - Must Use Transaction Pooler)
 
-#### ✅ USE Direct Connection for Render (Most Stable)
+#### ⚠️ ONLY USE Transaction Pooler for Render
 ```
-SPRING_DATASOURCE_URL=jdbc:postgresql://lzuxhsqrmgorczmyynqa.supabase.co:5432/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
+SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
 ```
 
-**Why Direct Connection over Poolers:**
-- ✅ **Direct Connection (port 5432)**: Most stable, persistent connections
+**Why NOT Direct Connection or Session Pooler:**
+- ❌ **Direct Connection (port 5432)**: NOT IPv4 compatible - Render uses IPv4-only networking
 - ❌ **Session Pooler (port 5432)**: Closes idle connections after ~10 min → "This connection has been closed" error
-- ⚠️ **Transaction Pooler (port 6543)**: Creates new connection per request, can timeout on cold starts
+- ✅ **Transaction Pooler (port 6543)**: Only option that works with Render's IPv4 network
 
 **Connection Options Explained:**
 
@@ -30,8 +30,8 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://lzuxhsqrmgorczmyynqa.supabase.co:5432/po
 - **NO "db." prefix in hostname** (use `lzuxhsqrmgorczmyynqa.supabase.co` NOT `db.lzuxhsqrmgorczmyynqa.supabase.co`)
 
 **Which to choose?**
-- ✅ **Use Direct Connection** (port 5432) - most stable, persistent connections
-- ⚠️ **Try Transaction Pooler** (port 6543) ONLY if Direct Connection has persistent network issues
+- ✅ **Use Transaction Pooler** (port 6543) - ONLY option compatible with Render's IPv4 network
+- ⚠️ **Direct Connection** (port 5432) - Requires IPv6 or purchasing IPv4 add-on from Supabase
 - ❌ **NEVER use Session Pooler** (port 5432 with pooler) - causes timeout errors
 
 ### Spring Configuration
