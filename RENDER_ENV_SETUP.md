@@ -4,17 +4,17 @@
 
 Set these in Render Dashboard: https://dashboard.render.com/
 
-### Database Connection (Choose One Option)
+### Database Connection (CRITICAL - Use Transaction Pooler Only)
 
-#### Option 1: Direct Connection (RECOMMENDED for stability)
-```
-SPRING_DATASOURCE_URL=jdbc:postgresql://lzuxhsqrmgorczmyynqa.supabase.co:5432/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
-```
-
-#### Option 2: Transaction Pooler (Try if Direct Connection times out)
+#### ⚠️ ONLY USE Transaction Pooler for Render
 ```
 SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?user=postgres.lzuxhsqrmgorczmyynqa&password=kittyontherun&sslmode=require
 ```
+
+**Why NOT Direct Connection or Session Pooler:**
+- ❌ **Direct Connection (port 5432)**: Network issues from Render's free tier
+- ❌ **Session Pooler (port 5432)**: Closes idle connections after ~10 min → "This connection has been closed" error
+- ✅ **Transaction Pooler (port 6543)**: Designed for serverless, creates new connection per request
 
 **Connection Options Explained:**
 
