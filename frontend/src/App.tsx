@@ -23,11 +23,11 @@ const MAINTENANCE_MODE = false;
 const AppContent: React.FC = () => {
   const [isAdminRoute, setIsAdminRoute] = useState(false);
   const [showMaintenanceOverlay, setShowMaintenanceOverlay] = useState(MAINTENANCE_MODE);
-  const { restaurants, fetchRestaurants } = useRestaurants();
+  const { restaurants, fetchRestaurants, updateRestaurantPin } = useRestaurants();
 
   // Check if current route is admin
   useEffect(() => {
-    setIsAdminRoute(window.location.pathname === '/admin');
+    setIsAdminRoute(window.location.pathname === '/manage-pung-pung');
   }, []);
 
   // Fetch restaurants on mount
@@ -75,6 +75,7 @@ const AppContent: React.FC = () => {
         restaurants={restaurants}
         onSave={handleSaveRestaurant}
         onDelete={handleDeleteRestaurant}
+        onUpdatePin={updateRestaurantPin}
       />
     );
   }
@@ -122,7 +123,7 @@ const App: React.FC = () => {
         <RestaurantProvider>
           <Routes>
             <Route path="/" element={<AppContent />} />
-            <Route path="/admin" element={<AppContent />} />
+            <Route path="/manage-pung-pung" element={<AppContent />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </RestaurantProvider>
