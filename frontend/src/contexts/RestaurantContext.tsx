@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { Restaurant, FilterState, MapViewState } from '../types';
 
+const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api`;
+
 // Normalize backend format to frontend format
 function normalizeRestaurant(backendRestaurant: any): Restaurant {
   return {
@@ -60,7 +62,7 @@ export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/restaurants');
+      const response = await fetch(`${API_BASE_URL}/restaurants`);
       if (!response.ok) throw new Error('Failed to fetch restaurants');
       const data = await response.json();
       // Normalize backend format to frontend format
@@ -78,7 +80,7 @@ export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setIsLoading(true);
     setError(null);
     try {
-      const url = `/api/restaurants/${id}/pin`;
+      const url = `${API_BASE_URL}/restaurants/${id}/pin`;
       console.log(`Fetching: ${url}`);
       const response = await fetch(url, {
         method: 'PATCH',

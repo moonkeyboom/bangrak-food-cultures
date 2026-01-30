@@ -25,7 +25,8 @@ export const MapView: React.FC<MapViewProps> = ({
     let restaurants = filteredRestaurants;
 
     // Filter to show only the editing restaurant if specified
-    if (isAdmin && editingRestaurantId) {
+    // When editingRestaurantId is provided, always show only that pin regardless of isAdmin
+    if (editingRestaurantId) {
       restaurants = restaurants.filter(r => r.id === editingRestaurantId);
     }
 

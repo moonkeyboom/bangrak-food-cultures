@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import type { Restaurant } from '../../types';
-import { Plus, Save, Edit2, Trash2, ArrowLeft, MapPin } from 'lucide-react';
+import { Plus, Save, Edit2, Trash2, ArrowLeft, MapPin, ExternalLink } from 'lucide-react';
 import { CATEGORY_OPTIONS } from '../../constants/categories';
 import { DISTRICT_OPTIONS } from '../../constants/districts';
 import { MapView } from '../Map/MapView';
@@ -12,12 +12,14 @@ interface AdminDashboardProps {
   restaurants: Restaurant[];
   onSave: (restaurant: Restaurant) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  onUpdatePin?: (id: string, pinX: number, pinY: number) => Promise<void>;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   restaurants,
   onSave,
   onDelete,
+  onUpdatePin,
 }) => {
   const { t } = useLanguage();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -47,20 +49,48 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleSavePinPosition = async () => {
-    if (!editingPinId || !previewPinPosition) return;
+    console.log('[handleSavePinPosition] Called');
+    console.log('[handleSavePinPosition] editingPinId:', editingPinId);
+    console.log('[handleSavePinPosition] previewPinPosition:', previewPinPosition);
+
+    if (!editingPinId || !previewPinPosition) {
+      console.log('[handleSavePinPosition] Missing required data, returning');
+      return;
+    }
 
     const restaurant = restaurants.find(r => r.id === editingPinId);
-    if (!restaurant) return;
+    if (!restaurant) {
+      console.log('[handleSavePinPosition] Restaurant not found, returning');
+      return;
+    }
 
-    // Update restaurant with new pin position
-    const updatedRestaurant = {
-      ...restaurant,
-      pinX: previewPinPosition.x,
-      pinY: previewPinPosition.y,
-    };
+    console.log('[handleSavePinPosition] Saving pin position for:', restaurant.nameTh);
+    console.log('[handleSavePinPosition] New position - X:', previewPinPosition.x, 'Y:', previewPinPosition.y);
 
-    await onSave(updatedRestaurant);
-    handleBackToList();
+    try {
+      // Use onUpdatePin if available (uses PATCH /{id}/pin), otherwise fallback to onSave (PUT /{id})
+      if (onUpdatePin) {
+        console.log('[handleSavePinPosition] Using onUpdatePin (PATCH endpoint)');
+        await onUpdatePin(editingPinId, previewPinPosition.x, previewPinPosition.y);
+      } else {
+        console.log('[handleSavePinPosition] Using onSave (PUT endpoint) - fallback');
+        // Update restaurant with new pin position
+        const updatedRestaurant = {
+          ...restaurant,
+          pinX: previewPinPosition.x,
+          pinY: previewPinPosition.y,
+        };
+
+        console.log('[handleSavePinPosition] Sending payload:', JSON.stringify(updatedRestaurant, null, 2));
+        await onSave(updatedRestaurant);
+      }
+      console.log('[handleSavePinPosition] Saved successfully');
+      handleBackToList();
+    } catch (error) {
+      console.error('[handleSavePinPosition] Error saving:', error);
+      console.error('[handleSavePinPosition] Error details:', JSON.stringify(error, null, 2));
+      alert('Failed to save pin position. Please try again.');
+    }
   };
 
   const handleSave = async () => {
@@ -367,9 +397,82 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <h2 className="text-xl font-bold mb-4">
                 Adjust Pin Position
               </h2>
-              <p className="text-gray-600 mb-4">
-                Adjust the pin position for: <strong>{restaurants.find(r => r.id === editingPinId)?.nameTh || 'Restaurant'}</strong>
-              </p>
+
+              {/* Restaurant Info Card */}
+              {(() => {
+                const restaurant = restaurants.find(r => r.id === editingPinId);
+                if (!restaurant) return null;
+
+                return (
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-4 mb-6 border border-gray-200">
+                    <div className="flex gap-4">
+                      {/* Restaurant Image */}
+                      <div className="flex-shrink-0">
+                        {restaurant.imageUrls && restaurant.imageUrls.length > 0 ? (
+                          <img
+                            src={restaurant.imageUrls[0]}
+                            alt={restaurant.nameTh}
+                            className="w-24 h-24 object-cover rounded-lg shadow-md"
+                          />
+                        ) : restaurant.imageUrl ? (
+                          <img
+                            src={restaurant.imageUrl}
+                            alt={restaurant.nameTh}
+                            className="w-24 h-24 object-cover rounded-lg shadow-md"
+                          />
+                        ) : (
+                          <div className="w-24 h-24 bg-gray-300 rounded-lg flex items-center justify-center">
+                            <span className="text-gray-500 text-2xl">📷</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Restaurant Details */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-lg text-gray-800 truncate">
+                          {restaurant.nameTh}
+                        </h3>
+                        {restaurant.nameEn && (
+                          <p className="text-sm text-gray-600 truncate">
+                            {restaurant.nameEn}
+                          </p>
+                        )}
+                        <div className="mt-2 space-y-1">
+                          {restaurant.descriptionTh && (
+                            <p className="text-xs text-gray-700 line-clamp-2">
+                              <span className="font-medium">📝 TH:</span> {restaurant.descriptionTh}
+                            </p>
+                          )}
+                          {restaurant.descriptionEn && (
+                            <p className="text-xs text-gray-600 line-clamp-2">
+                              <span className="font-medium">📝 EN:</span> {restaurant.descriptionEn}
+                            </p>
+                          )}
+                          <p className="text-xs text-gray-600">
+                            <span className="font-medium">Category:</span> {restaurant.category}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            <span className="font-medium">Sub-district:</span> {restaurant.subDistrict}
+                          </p>
+                          {restaurant.googleMapsUrl && (
+                            <p className="text-xs text-blue-600 truncate">
+                              <span className="font-medium">📍</span>{' '}
+                              <a
+                                href={restaurant.googleMapsUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:underline"
+                              >
+                                View on Google Maps
+                              </a>
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Pin Position Input Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -416,7 +519,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <button
                   onClick={handleSavePinPosition}
                   className="flex items-center gap-2 px-6 py-2 bg-[#7F0303] text-white rounded-lg font-medium hover:bg-[#6a0202] transition-colors"
@@ -424,6 +527,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <Save size={20} />
                   Save Pin Position
                 </button>
+                {(() => {
+                  const restaurant = restaurants.find(r => r.id === editingPinId);
+                  return restaurant?.googleMapsUrl ? (
+                    <button
+                      onClick={() => window.open(restaurant.googleMapsUrl, '_blank')}
+                      className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    >
+                      <ExternalLink size={20} />
+                      Open in Google Maps
+                    </button>
+                  ) : null;
+                })()}
                 <button
                   onClick={handleBackToList}
                   className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
