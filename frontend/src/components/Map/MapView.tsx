@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useRestaurants } from '../../contexts/RestaurantContext';
 import { Pin } from './Pin';
 import { MapControls } from './MapControls';
+import { MapLoadingOverlay } from './MapLoadingOverlay';
 
 interface MapViewProps {
   isAdmin?: boolean;
@@ -14,7 +15,10 @@ export const MapView: React.FC<MapViewProps> = ({
   editingRestaurantId = null,
   previewPinPosition = null
 }) => {
-  const { filteredRestaurants, mapView, setMapView, updateRestaurantPin } = useRestaurants();
+  const { filteredRestaurants, mapView, setMapView, updateRestaurantPin, isLoading } = useRestaurants();
+
+  // State สำหรับติดตามว่า markers ถูก render แล้ว
+  const [areMarkersRendered, setAreMarkersRendered] = useState(false);
 
   // Filter pins: if editing a restaurant, show only that pin
   const displayedRestaurants = React.useMemo(() => {
@@ -376,8 +380,30 @@ export const MapView: React.FC<MapViewProps> = ({
     });
   }, [calculateMinScale, setMapView, viewportSize]); // Recalculate when viewport changes
 
+  // Track markers rendering state
+  // Overlay ต้องหายเมื่อทั้ง isLoading และ areMarkersRendered เป็น true
+  useEffect(() => {
+    // เมื่อไม่ได้โหลดแล้ว markers ควรจะ render แล้ว
+    if (!isLoading && !areMarkersRendered && displayedRestaurants.length > 0) {
+      // ใช้ requestAnimationFrame เพื่อให้ markers render ทันก่อนตั้งค่า
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAreMarkersRendered(true);
+        });
+      });
+    }
+
+    // Reset เมื่อเริ่มโหลดใหม่
+    if (isLoading) {
+      setAreMarkersRendered(false);
+    }
+  }, [isLoading, displayedRestaurants.length, areMarkersRendered]);
+
   return (
     <div className="relative w-full h-full overflow-hidden">
+      {/* Loading Overlay - แสดงเมื่อกำลังโหลดหรือ markers ยังไม่ render ครบ */}
+      <MapLoadingOverlay visible={isLoading || !areMarkersRendered} />
+
       <div
         ref={mapRef}
         className="absolute inset-0 cursor-grab active:cursor-grabbing touch-none"
